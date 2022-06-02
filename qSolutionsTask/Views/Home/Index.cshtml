@@ -1,8 +1,49 @@
-﻿@{
+﻿@model qSolutionsTask.Entity.ClQACAddress
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="d-flex justify-content-center">
+    <form asp-controller="SoapApi" asp-action="CheckAddress">
+        <div class="row">
+            <div class="col">
+                <label class="form-label">@Html.LabelFor(m => m.m_sCountry)</label>
+                <input type="text" asp-for="m_sCountry" class="form-control">
+            </div>
+            <div class="col">
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_sCity)</label>
+                <input type="text" asp-for="m_sCity" class="form-control">
+            </div>
+            <div class="col">
+
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_sDistrict)</label>
+                <input type="text" asp-for="m_sDistrict" class="form-control">
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_sStreet)</label>
+                <input type="text" asp-for="m_sStreet" class="form-control">
+            </div>
+            <div class="col">
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_iHouseNo)</label>
+                <input type="number" asp-for="m_iHouseNo" class="form-control">
+            </div>
+            <div class="col">
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_sZIP)</label>
+                <input type="text" asp-for="m_sZIP" class="form-control">
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="col ">
+                <button type="submit" class="btn btn-primary mt-2  w-25">Submit</button>
+            </div>
+        </div>
+        
+    </form>
 </div>

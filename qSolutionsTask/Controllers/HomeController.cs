@@ -14,13 +14,17 @@ public class HomeController : Controller
     {
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
         SoapApiController asd = new SoapApiController();
-        await asd.CheckAddressAsync(new ClQACAddress());
-        return View();
+        var dima = asd.CheckAddressAsync(new ClQACAddress()).Result;
+        return View(new ClQACAddress());
     }
 
+    public IActionResult ResultFromCall()
+    {
+        return PartialView("SubmittionInfoPartial", );
+    }
 
     
 }

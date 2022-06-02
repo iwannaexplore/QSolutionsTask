@@ -1,10 +1,8 @@
 using System.Net;
 using System.Reflection.Metadata;
+using System.Security;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Xml;
-using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using qSolutionsTask.Entity;
 using qSolutionsTask.Services;
@@ -18,55 +16,16 @@ public class SoapApiController : Controller
     public async Task<string> CheckAddressAsync([FromForm] ClQACAddress address)
     {
         
-        var postResponse2 =  await PostSoapRequestAsync("https://qws1.de/QWS/QACWebService.asmx?op=UCheckAddress", DumbXml);
-
-        
-        
-        
         var dumbObject = DumbValue();
-        var xmlResult = ConvertToXml(dumbObject, typeof(ClQACUCheckAddressViewModel));
-        
+        var xmlResult = XmlSoapConverter.ConvertToSoapXml(dumbObject, typeof(UCheckAddressViewModel));
+
         var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, xmlResult);
-        var model = ConvertFromXml(postResponse);
+        var model = (UCheckAddressResponseViewModel)XmlSoapConverter.ConvertFromSoapXml(postResponse,
+            typeof(UCheckAddressResponseViewModel));
         var modelJson = JsonSerializer.Serialize(model);
         return modelJson;
     }
 
-    private object ConvertFromXml(string postResponse)
-    {
-        XmlTypeMapping myTypeMapping =
-            new SoapReflectionImporter().ImportTypeMapping(typeof(UCheckAddressResponse));
-        XmlSerializer serializer = new XmlSerializer(myTypeMapping);
-        UCheckAddressResponse result;
-        using (TextReader reader = new StringReader(postResponse))
-        {
-            var asd = serializer.Deserialize(reader);
-            result = (UCheckAddressResponse)serializer.Deserialize(reader);
-        }
-
-        return result;
-    }
-
-    private string ConvertToXml(object obj, Type objType)
-    {
-        var emptyNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
-        var serializer = new XmlSerializer(objType);
-
-        var settings = new XmlWriterSettings
-        {
-            OmitXmlDeclaration = true
-        };
-
-        using var stream = new StringWriter();
-        using var objectWriter = XmlWriter.Create(stream, settings);
-        serializer.Serialize(objectWriter, obj, emptyNamespaces);
-
-        var xmlObject = stream.ToString();
-        var xmlSoap = SoapWrapper.WrapInSoap(xmlObject);
-        
-        return xmlSoap;
-    }
-    
     private async Task<string> PostSoapRequestAsync(string url, string xmtText)
     {
         var httpClient = new HttpClient();
@@ -86,25 +45,24 @@ public class SoapApiController : Controller
         }
     }
 
-    private ClQACUCheckAddressViewModel DumbValue()
+    private UCheckAddressViewModel DumbValue()
     {
         ClQACAddress address1 = new ClQACAddress()
         {
             m_iFlags = 1, m_sCity = "asd", m_sCountry = "Aad", m_sDistrict = "s", m_sRegion = "s", m_sStreet = "asd",
             m_sCityExt = "asd", m_iAddressType = 2, m_iHouseNo = 2, m_sHouseExt = "s", m_sOldCity = "asd",
             m_sOldStreet = "sd", m_sShortCity = "ds", m_sShortStreet = "sd", m_iCountryID = 2, m_iHouseNoEnd = 2,
-            m_sHouseExtEnd = "asd", m_iHouseNoStart = 2, m_iLanguageID = 2, m_iRegionID = 3, m_sHouseExtStart = "asd",
+            m_sHouseExtEnd = "asd", m_iLanguageID = 2, m_iRegionID = 3, m_sHouseExtStart = "asd",
             m_sOldCityExt = "a", m_sZIP = "ds"
         };
-        ClQACUCheckAddressViewModel viewModel = new ClQACUCheckAddressViewModel()
+        UCheckAddressViewModel viewModel = new UCheckAddressViewModel()
         {
             UserName = AppConstants.TestUserName, UserPassword = AppConstants.TestUserPassword,
             Tolerance = AppConstants.TestTolerance, SourceAddress = address1
         };
         return viewModel;
     }
-    
-    
+
 
     public string DumbXml { get; set; } = @"<?xml version=""1.0"" encoding=""utf-8""?>
     <soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"">

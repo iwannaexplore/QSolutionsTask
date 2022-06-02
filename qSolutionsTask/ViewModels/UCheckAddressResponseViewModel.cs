@@ -4,8 +4,9 @@ using qSolutionsTask.Entity;
 namespace qSolutionsTask.ViewModels;
 
 [Serializable]
-[XmlRoot(Namespace = "http://www.qaddress.de/webservices", ElementName = "UCheckAddressResponse")]
-public class UCheckAddressResponse
+[XmlType(TypeName="UCheckAddressResponse")]
+[XmlRoot(Namespace = "http://www.qaddress.de/webservices")]
+public class UCheckAddressResponseViewModel
 {
     public ClQACResultAddress UCheckAddressResult { get; set; }
 }
