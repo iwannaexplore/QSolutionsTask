@@ -25,10 +25,7 @@ public class SoapApiController : Controller
         
         var dumbObject = DumbValue();
         var xmlResult = ConvertToXml(dumbObject, typeof(ClQACUCheckAddressViewModel));
-        // var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, xmlResult);
-
-        var dima1 = xmlResult;
-        var dima2 = DumbXml;
+        
         var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, xmlResult);
         var model = ConvertFromXml(postResponse);
         var modelJson = JsonSerializer.Serialize(model);
@@ -38,12 +35,13 @@ public class SoapApiController : Controller
     private object ConvertFromXml(string postResponse)
     {
         XmlTypeMapping myTypeMapping =
-            new SoapReflectionImporter().ImportTypeMapping(typeof(ClQACUCheckAddressResultViewModel));
+            new SoapReflectionImporter().ImportTypeMapping(typeof(UCheckAddressResponse));
         XmlSerializer serializer = new XmlSerializer(myTypeMapping);
-        ClQACUCheckAddressResultViewModel result;
+        UCheckAddressResponse result;
         using (TextReader reader = new StringReader(postResponse))
         {
-            result = (ClQACUCheckAddressResultViewModel)serializer.Deserialize(reader);
+            var asd = serializer.Deserialize(reader);
+            result = (UCheckAddressResponse)serializer.Deserialize(reader);
         }
 
         return result;
@@ -105,6 +103,8 @@ public class SoapApiController : Controller
         };
         return viewModel;
     }
+    
+    
 
     public string DumbXml { get; set; } = @"<?xml version=""1.0"" encoding=""utf-8""?>
     <soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"">

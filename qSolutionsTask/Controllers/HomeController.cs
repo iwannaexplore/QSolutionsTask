@@ -16,8 +16,6 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        
-        
         SoapApiController asd = new SoapApiController();
         await asd.CheckAddressAsync(new ClQACAddress());
         return View();
