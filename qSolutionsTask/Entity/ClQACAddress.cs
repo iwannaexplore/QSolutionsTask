@@ -1,5 +1,8 @@
+using System.Xml.Serialization;
+
 namespace qSolutionsTask.Entity;
 
+[Serializable]
 public class ClQACAddress
 {
     public int m_iAddressType;

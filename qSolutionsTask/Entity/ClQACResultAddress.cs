@@ -2,6 +2,7 @@ using System.Collections;
 
 namespace qSolutionsTask.Entity;
 
+[Serializable]
 public class ClQACResultAddress
 {
     public int ErrorCode;
