@@ -1,38 +1,19 @@
-using System.Net;
-using System.Reflection.Metadata;
-using System.Security;
-using System.Text;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using qSolutionsTask.Entity;
-using qSolutionsTask.Services;
-using qSolutionsTask.ViewModels;
+/*namespace qSolutionsTask.Services;
 
-namespace qSolutionsTask.Controllers;
-
-public enum QAC_STATUS
+public class SoapApiWorker
 {
-    ERROR = -2,
-    ABROAD = -1,
-    NOTFOUND = 0,
-    CORRECT = 1,
-    AUTOCORRECTED = 2,
-    MULTIPLERESULTS = 3
-}
-
-public class SoapApiController : Controller
-{
-    [HttpPost]
-    public async Task<IActionResult> CheckAddressAsync([FromForm] ClQACAddress address)
+    
+    public async Task<string> CheckAddressAsync(ClQACAddress address)
     {
-        var viewModel = CreateCheckAddressViewModel(address);
-        var soapViewModel = XmlSoapConverter.ConvertToSoapXml(viewModel, typeof(UCheckAddressViewModel));
+        
+        var dumbObject = DumbValue();
+        var xmlResult = XmlSoapConverter.ConvertToSoapXml(dumbObject, typeof(UCheckAddressViewModel));
 
-        var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, soapViewModel);
+        var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, xmlResult);
         var model = (UCheckAddressResponseViewModel)XmlSoapConverter.ConvertFromSoapXml(postResponse,
             typeof(UCheckAddressResponseViewModel));
-        ViewBag.OperationResult = model.UCheckAddressResult;
-        return View("../Home/Index", model.UCheckAddressResult.ResultAddress);
+        var modelJson = JsonSerializer.Serialize(model);
+        return modelJson;
     }
 
     private async Task<string> PostSoapRequestAsync(string url, string xmtText)
@@ -54,18 +35,26 @@ public class SoapApiController : Controller
         }
     }
 
-    private UCheckAddressViewModel CreateCheckAddressViewModel(ClQACAddress address)
+    private UCheckAddressViewModel DumbValue()
     {
+        ClQACAddress address1 = new ClQACAddress()
+        {
+            m_iFlags = 1, m_sCity = "asd", m_sCountry = "Aad", m_sDistrict = "s", m_sRegion = "s", m_sStreet = "asd",
+            m_sCityExt = "asd", m_iAddressType = 2, m_iHouseNo = 2, m_sHouseExt = "s", m_sOldCity = "asd",
+            m_sOldStreet = "sd", m_sShortCity = "ds", m_sShortStreet = "sd", m_iCountryID = 2, m_iHouseNoEnd = 2,
+            m_sHouseExtEnd = "asd", m_iLanguageID = 2, m_iRegionID = 3, m_sHouseExtStart = "asd",
+            m_sOldCityExt = "a", m_sZIP = "ds"
+        };
         UCheckAddressViewModel viewModel = new UCheckAddressViewModel()
         {
             UserName = AppConstants.TestUserName, UserPassword = AppConstants.TestUserPassword,
-            Tolerance = AppConstants.TestTolerance, SourceAddress = address
+            Tolerance = AppConstants.TestTolerance, SourceAddress = address1
         };
         return viewModel;
     }
 
 
-    private string DumbXml { get; set; } = @"<?xml version=""1.0"" encoding=""utf-8""?>
+    public string DumbXml { get; set; } = @"<?xml version=""1.0"" encoding=""utf-8""?>
     <soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"">
     <soap:Body>
     <UCheckAddress xmlns=""http://www.qaddress.de/webservices"">
@@ -100,4 +89,4 @@ public class SoapApiController : Controller
     </UCheckAddress>
     </soap:Body>
     </soap:Envelope>";
-}
+}*/

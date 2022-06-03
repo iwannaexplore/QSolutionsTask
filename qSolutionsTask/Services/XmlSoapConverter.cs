@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using qSolutionsTask.Entity;
 using qSolutionsTask.ViewModels;
 
 namespace qSolutionsTask.Services;
@@ -13,6 +15,7 @@ public static class XmlSoapConverter
   но нет времени на проверку, так что оставлю как есть*/
     public static object ConvertFromSoapXml(string postResponse, Type type)
     {
+        
         XmlSerializer serializer = new XmlSerializer(type);
 
         XDocument document = XDocument.Parse(postResponse);
@@ -20,8 +23,37 @@ public static class XmlSoapConverter
         var body = evelope.FirstNode as XElement;
         var uCheckAddress = body!.FirstNode as XElement;
 
+        
+        
+        
+        XmlAttributes ordersAttributes = new XmlAttributes();
+
+        ordersAttributes.XmlArrayItems.Add(new XmlArrayItemAttribute("SimilarAddresses", typeof(ClQACSimilarAddress)));
+
+        XmlAttributeOverrides overrides = new XmlAttributeOverrides();
+
+        overrides.Add(typeof(ArrayList), "SimilarAddresses", ordersAttributes);
+        
+            XmlSerializer ser = new XmlSerializer(type);//, overrides);
+            var asd = ser.Deserialize(uCheckAddress!.CreateReader());
+        
+        
+        
+        
         object response = serializer.Deserialize(uCheckAddress!.CreateReader())!;
+        
         return response;
+    }
+
+    private static List<ClQACSimilarAddress> GetSimilarAddresses(ArrayList similarAddressesXml)
+    {
+        XmlSerializer serializer = new XmlSerializer(typeof(ClQACSimilarAddress));
+        var similarAddresses = new List<ClQACSimilarAddress>();
+        foreach (var similarAddress in similarAddressesXml)
+        {
+            // var result = serializer.Deserialize(());
+        }
+        return new List<ClQACSimilarAddress>();
     }
 
     public static string ConvertToSoapXml(object obj, Type objType)

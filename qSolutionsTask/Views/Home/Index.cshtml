@@ -1,10 +1,15 @@
-﻿@model qSolutionsTask.Entity.ClQACAddress
+﻿@using qSolutionsTask.Entity
+@using qSolutionsTask.Controllers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model qSolutionsTask.Entity.ClQACAddress
+
 @{
     ViewData["Title"] = "Home Page";
+    ClQACResultAddress operationResult = ViewBag.OperationResult as ClQACResultAddress;
 }
 
-<div class="d-flex justify-content-center">
-    <form asp-controller="SoapApi" asp-action="CheckAddress">
+<div class="row d-flex justify-content-center">
+    <form asp-controller="SoapApi" asp-action="CheckAddress" class="col-8">
         <div class="row">
             <div class="col">
                 <label class="form-label">@Html.LabelFor(m => m.m_sCountry)</label>
@@ -44,6 +49,24 @@
                 <button type="submit" class="btn btn-primary mt-2  w-25">Submit</button>
             </div>
         </div>
-        
     </form>
+    <div class="col-4">
+
+        @if (operationResult != null)
+        {
+            <textarea class="form-control">
+              @operationResult.ErrorMessage
+            </textarea>
+            @if (operationResult.ResultStatus == (int)QAC_STATUS.MULTIPLERESULTS)
+            {
+                @* @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[]) *@
+            }
+        }
+        else
+        {
+            <textarea class="form-control"></textarea>
+        }
+
+    </div>
+    
 </div>

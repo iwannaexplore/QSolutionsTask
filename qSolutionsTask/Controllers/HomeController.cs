@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.Collections;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
@@ -10,21 +11,11 @@ namespace qSolutionsTask.Controllers;
 
 public class HomeController : Controller
 {
-    public HomeController()
-    {
-    }
-
     public IActionResult Index()
     {
-        SoapApiController asd = new SoapApiController();
-        var dima = asd.CheckAddressAsync(new ClQACAddress()).Result;
-        return View(new ClQACAddress());
+        return View(new ClQACAddress(){m_sCountry = "Deutschland", m_sStreet = "Offenbachstr.", m_sZIP = "81245"});
     }
-
-    public IActionResult ResultFromCall()
-    {
-        return PartialView("SubmittionInfoPartial", );
-    }
-
+    
+    
     
 }
