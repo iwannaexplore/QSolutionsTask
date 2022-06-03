@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using qSolutionsTask.Entity;
+using qSolutionsTask.Extensions;
 using qSolutionsTask.Services;
 using qSolutionsTask.ViewModels;
 
@@ -29,12 +30,33 @@ public class SoapApiController : Controller
         var soapViewModel = XmlSoapConverter.ConvertToSoapXml(viewModel, typeof(UCheckAddressViewModel));
 
         var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, soapViewModel);
-        var model = (UCheckAddressResponseViewModel)XmlSoapConverter.ConvertFromSoapXml(postResponse,
+        var container = (UCheckAddressResponseViewModel)XmlSoapConverter.ConvertFromSoapXml(postResponse,
             typeof(UCheckAddressResponseViewModel));
-        ViewBag.OperationResult = model.UCheckAddressResult;
-        return View("../Home/Index", model.UCheckAddressResult.ResultAddress);
+        var model = container.UCheckAddressResult;
+        model.ErrorMessage = CreateMessage(model.ResultStatus, model.ResultAddress);
+        ViewBag.OperationResult = container.UCheckAddressResult;
+        return View("../Home/Index", container.UCheckAddressResult.ResultAddress);
     }
 
+    private string CreateMessage(int statusNumber, ClQACAddress address)
+    {
+        var status = (QAC_STATUS)statusNumber;
+        switch (status)
+        {
+            case QAC_STATUS.ERROR:
+            case QAC_STATUS.NOTFOUND:
+            case QAC_STATUS.ABROAD:
+                return "Status ERROR/ABROAD/NOT FOUND obtained during address check, submitting is cancelled";
+            case QAC_STATUS.CORRECT:
+            case QAC_STATUS.AUTOCORRECTED:
+                return address.ToFullAddress();
+            case QAC_STATUS.MULTIPLERESULTS:
+                return "Choose between multiple results";
+            default:
+                return "Unknown Error";
+        }
+    }
+    
     private async Task<string> PostSoapRequestAsync(string url, string xmtText)
     {
         var httpClient = new HttpClient();

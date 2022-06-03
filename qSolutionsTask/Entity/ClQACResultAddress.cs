@@ -10,5 +10,6 @@ public class ClQACResultAddress
     public string ErrorMessage;
     public int ResultStatus;
     public ClQACAddress ResultAddress;
+    [XmlArrayItem("anyType", Type = typeof(ClQACSimilarAddress))]
     public ArrayList SimilarAddresses;
 }

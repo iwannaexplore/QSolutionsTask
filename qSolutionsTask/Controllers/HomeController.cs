@@ -15,7 +15,14 @@ public class HomeController : Controller
     {
         return View(new ClQACAddress(){m_sCountry = "Deutschland", m_sStreet = "Offenbachstr.", m_sZIP = "81245"});
     }
-    
+
+   
+    [HttpPost]
+    public IActionResult SubmitForm([FromForm] ClQACAddress address)
+    {
+        return Ok();
+    }
+
     
     
 }

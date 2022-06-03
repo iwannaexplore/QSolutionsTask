@@ -9,7 +9,7 @@
 }
 
 <div class="row d-flex justify-content-center">
-    <form asp-controller="SoapApi" asp-action="CheckAddress" class="col-8">
+    <form asp-controller="SoapApi" asp-action="CheckAddress" class="col-8" id="addressForm">
         <div class="row">
             <div class="col">
                 <label class="form-label">@Html.LabelFor(m => m.m_sCountry)</label>
@@ -46,7 +46,11 @@
 
         <div class="row">
             <div class="col ">
-                <button type="submit" class="btn btn-primary mt-2  w-25">Submit</button>
+                <button type="submit" class="btn btn-warning mt-2  w-25" id="validateButton">Validate</button>
+                <button type="button" class="btn btn-secondary mt-2  w-25" data-bs-toggle="modal" data-bs-target="#AddressesModal" @(operationResult==null ? "disabled" : operationResult.SimilarAddresses.Count == 0 ? "disabled" : "")>
+                    Select Addresses
+                </button>
+                <button type="button" class="btn btn-outline-success mt-2 w-25" id="submitButton" @(operationResult == null ? "disabled" : "")>Submit</button>
             </div>
         </div>
     </form>
@@ -64,9 +68,13 @@
         }
         else
         {
-            <textarea class="form-control"></textarea>
+            <textarea class="form-control" rows="3"></textarea>
         }
 
     </div>
-    
+
 </div>
+@if (operationResult != null)
+{
+    @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[])
+}

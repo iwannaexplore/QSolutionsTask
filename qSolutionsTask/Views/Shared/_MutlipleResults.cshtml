@@ -1,6 +1,64 @@
+@using qSolutionsTask.Entity
+@using System.Linq.Expressions
 @model qSolutionsTask.Entity.ClQACSimilarAddress[]
-@foreach (var elem in Model)
+@for (var i = 0; i < Model.Length; i++)
 {
-    <p>@elem.Similarity</p>
+    var elem = Model[i];
+    var index = i;
+    <form asp-controller="Home" asp-action="SubmitForm" class="d-none" id=@("addressForm" + index)>
+        <input type="text" asp-for="@elem.Address.m_sCountry">
+        <input type="text" asp-for="@elem.Address.m_sCity">
+        <input type="text" asp-for="@elem.Address.m_sDistrict">
+        <input type="text" asp-for="@elem.Address.m_sStreet">
+        <input type="number" asp-for="@elem.Address.m_iHouseNo">
+        <input type="text" asp-for="@elem.Address.m_sZIP">
+    </form>
 }
 
+
+<!-- Modal -->
+<div class="modal fade" id="AddressesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog .modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Similarity</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">City</th>
+                        <th scope="col">District</th>
+                        <th scope="col">Street</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for (var i = 0; i < Model.Length; i++)
+                    {
+                        var elem = Model[i];
+                        var index = i;
+
+                        <tr formIndex="@index" onclick="SelectTrElement(this)">
+                            <th scope="row">@elem.Similarity</th>
+                            <td>@elem.Address.m_sCountry</td>
+                            <td>@elem.Address.m_sCity</td>
+                            <td>@elem.Address.m_sDistrict</td>
+                            <td>@elem.Address.m_sStreet @(elem.Address.m_iHouseNo == 0 ? $"{elem.Address.m_iHouseNoStart}-{elem.Address.m_iHouseNoEnd}" : elem.Address.m_iHouseNo)</td>
+                        </tr>
+                    }
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <input type="submit" id="saveSelected" class="btn btn-outline-success" data-bs-dismiss="modal" value="Save Selected"/>
+                <input type="submit" class="btn btn-secondary" data-bs-dismiss="modal" form="addressForm" value="Save Original"/>
+                <button type="button" class="btn btn-danger">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

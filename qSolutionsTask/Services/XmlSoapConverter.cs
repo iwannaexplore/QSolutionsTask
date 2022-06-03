@@ -22,23 +22,6 @@ public static class XmlSoapConverter
         XElement? evelope = (XElement)document.FirstNode!; //можно было бы написать через проверку на null
         var body = evelope.FirstNode as XElement;
         var uCheckAddress = body!.FirstNode as XElement;
-
-        
-        
-        
-        XmlAttributes ordersAttributes = new XmlAttributes();
-
-        ordersAttributes.XmlArrayItems.Add(new XmlArrayItemAttribute("SimilarAddresses", typeof(ClQACSimilarAddress)));
-
-        XmlAttributeOverrides overrides = new XmlAttributeOverrides();
-
-        overrides.Add(typeof(ArrayList), "SimilarAddresses", ordersAttributes);
-        
-            XmlSerializer ser = new XmlSerializer(type);//, overrides);
-            var asd = ser.Deserialize(uCheckAddress!.CreateReader());
-        
-        
-        
         
         object response = serializer.Deserialize(uCheckAddress!.CreateReader())!;
         
