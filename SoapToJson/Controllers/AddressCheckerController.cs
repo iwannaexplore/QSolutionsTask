@@ -1,19 +1,23 @@
 using System.Text;
-using System.Text.Json;
 using ClQACEntities;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SoapToJson.Extensions;
 using SoapToJson.Services;
 using SoapToJson.ViewModels;
 
 namespace SoapToJson.Controllers;
 
+[EnableCors]
 [ApiController]
 [Route("[controller]")]
 public class AddressCheckerController : ControllerBase{
+   
     [HttpPost]
-    public async Task<string> CheckAddressAsync([FromForm] ClQACAddress address)
+    public async Task<string> CheckAddressAsync([FromBody]ClQACAddressViewModel addressViewModel)
     {
+        var address = new ClQACAddress().FillFromViewModel(addressViewModel);
         var viewModel = CreateCheckAddressViewModel(address);
         var viewModelSoap = XmlSoapConverter.ConvertToSoapXml(viewModel, typeof(UCheckAddressViewModel));
 
@@ -28,11 +32,15 @@ public class AddressCheckerController : ControllerBase{
         
         return modelJson;
     }
-    
+    [HttpGet]
+    public  string CheckAddressAsync()
+    {
+        return "Hello world";
+    }
 
     private string ConvertToJson(ClQACResultAddress model)
     {
-        var modelJson = JsonSerializer.Serialize(model);
+        string modelJson = JsonConvert.SerializeObject(model);
         return modelJson;
     }
 

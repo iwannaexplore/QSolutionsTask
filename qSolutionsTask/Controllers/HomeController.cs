@@ -1,12 +1,5 @@
-﻿using System.Buffers;
-using System.Collections;
-using System.Diagnostics;
-using System.Net;
-using System.Text;
-using ClQACEntities;
+﻿using ClQACEntities;
 using Microsoft.AspNetCore.Mvc;
-using qSolutionsTask.Entity;
-using qSolutionsTask.Models;
 
 namespace qSolutionsTask.Controllers;
 
@@ -26,7 +19,7 @@ public class HomeController : Controller
             m_sCountry = "Deutschland", m_sZIP = "81245", m_sCity = "München", m_sStreet = "Ophenbachstr.",
             m_iHouseNo = 47, m_sDistrict = "Pasing-Obermenzing"
         };
-        return View(multipleTest);
+        return View(autoCorrect);
     }
 
 

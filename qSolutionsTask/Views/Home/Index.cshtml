@@ -1,30 +1,28 @@
-﻿@using qSolutionsTask.Entity
-@using qSolutionsTask.Controllers
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model qSolutionsTask.Entity.ClQACAddress
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using ClQACEntities
+@model ClQACAddress
 
 @{
     ViewData["Title"] = "Home Page";
-    ClQACResultAddress operationResult = ViewBag.OperationResult as ClQACResultAddress;
 }
 @*тут было бы неплохо использовать asp-for, но из-за того, что форма изменяется после post, asp-for
  почему-то не вытягивает новые значения. Вообще в целом этот asp-for как я вычитал, довольно не всесильный*@
 <div class="row d-flex justify-content-center">
-    <form asp-controller="SoapApi" asp-action="CheckAddress" class="col-8" id="addressForm">
+    <form action="https://localhost:7120/AddressChecker" class="col-8" id="addressForm" method="post">
         <div class="row">
             <div class="col">
                 @* ToDo change asp-for to input name and value *@
-                <label class="form-label">@Html.LabelFor(m => m.m_sCountry)</label>
-                <input type="text" asp-for="m_sCountry" class="form-control">
+                <label class="form-label">Country</label>
+                <input type="text" name="m_sCountry" value="@Model.m_sCountry" class="form-control">
                 @* ToDo Add green border if change values *@
             </div>
             <div class="col">
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_sZIP)</label>
-                <input type="text" asp-for="m_sZIP" class="form-control">
+                <label class="form-label">Postal Code</label>
+                <input type="text" name="m_sZIP" value="@Model.m_sZIP" class="form-control">
             </div>
             <div class="col">
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_sCity)</label>
-                <input type="text" asp-for="m_sCity" class="form-control">
+                <label class="form-label">City</label>
+                <input type="text" name="m_sCity" value="@Model.m_sCity" class="form-control">
             </div>
 
 
@@ -32,48 +30,50 @@
         <div class="row">
 
             <div class="col">
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_sStreet)</label>
+                <label class="form-label">Street</label>
                 <input type="text" name="m_sStreet" value="@Model.m_sStreet" class="form-control">
             </div>
             <div class="col">
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_iHouseNo)</label>
-                <input type="number" asp-for="m_iHouseNo" class="form-control">
+                <label class="form-label">House number</label>
+                <input type="number" name="m_iHouseNo" value="@Model.m_iHouseNo" class="form-control">
             </div>
 
             <div class="col">
 
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_sDistrict)</label>
-                <input type="text" asp-for="m_sDistrict" class="form-control">
+                <label class="form-label">District</label>
+                <input type="text" name="m_sDistrict" value="@Model.m_sDistrict" class="form-control">
             </div>
 
         </div>
 
         <div class="row">
             <div class="col ">
-                <button type="submit" class="btn btn-warning mt-2  w-25" id="validateButton">Validate</button>
-                <button type="button" class="btn btn-secondary mt-2  w-25" data-bs-toggle="modal" data-bs-target="#AddressesModal" @(operationResult == null ? "disabled" : operationResult.SimilarAddresses.Count == 0 ? "disabled" : "")>
+                <button class="btn btn-warning mt-2  w-25" id="validateButton">Validate</button>
+                <button type="button" id="selectAddress" class="btn btn-secondary mt-2  w-25" data-bs-toggle="modal" data-bs-target="#AddressesModal">
                     Select Addresses
                 </button>
-                <button type="button" class="btn btn-outline-success mt-2 w-25" id="submitButton" @(operationResult == null ? "disabled" : "")>Submit</button>
+                <button type="button" class="btn btn-outline-success mt-2 w-25" id="submitButton">Submit</button>
+
             </div>
         </div>
     </form>
     <div class="col-4">
 
-        @if (operationResult != null)
-        {
-            <textarea class="form-control">
-              @operationResult.ErrorMessage
-            </textarea>
-            @if (operationResult.ResultStatus == (int)QAC_STATUS.MULTIPLERESULTS)
-            {
-                @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[])
-            }
-        }
-        else
-        {
-            <textarea class="form-control" rows="3"></textarea>
-        }
+        @* ToDo Make partial view work *@
+        @* @if (operationResult != null) *@
+        @* { *@
+        @*     <textarea class="form-control"> *@
+        @*       @operationResult.ErrorMessage *@
+        @*     </textarea> *@
+        @*     @if (operationResult.ResultStatus == (int)QAC_STATUS.MULTIPLERESULTS) *@
+        @*     { *@
+        @*         @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[]) *@
+        @*     } *@
+        @* } *@
+        @* else *@
+        @* { *@
+        @*     <textarea class="form-control" rows="3"></textarea> *@
+        @* } *@
 
     </div>
 
