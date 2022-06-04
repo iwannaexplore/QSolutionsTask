@@ -30,9 +30,10 @@ class MainForm {
         this.elementsHtml = this.form.getElementsByTagName("input");
 
         this._defineButtons()
-        this.form.onsubmit = () => {
+        this.form.onsubmit = (e) => {
+            e.preventDefault();
             let values = this.getValuesOfElements();
-            app.messageAreaBlock.value =values.toString();
+            app.messageAreaBlock.value = values.toString();
         }
     }
 
@@ -55,9 +56,9 @@ class MainForm {
             let name = element.name;
             for (let prop in address) {
                 if (prop === name) {
-                    if (element.value !== address[prop]) {
+                    if (element.value != address[prop]) {
                         element.value = address[prop];
-                        element.classList.add("input-green-border");
+                        element.classList.add("green-border");
                     }
                 }
             }
@@ -81,8 +82,9 @@ class MainForm {
         this._parseContainer(containerJson);
     }
 
-    _enableButtons() {
-        app.selectAddressButton.removeAttribute("disabled");
+    _enableButtons(isSelectButtonActive) {
+        if (isSelectButtonActive)
+            app.selectAddressButton.removeAttribute("disabled");
         this.submitButton.removeAttribute("disabled");
     }
 
@@ -91,8 +93,7 @@ class MainForm {
         app.errorMessage = container.ErrorMessage;
         app.resultStatus = container.ResultStatus;
         app.similarAddresses = container.SimilarAddresses;
-        app.resultAddress = container.resultAddress;
-        app.messageAreaBlock.value = app.errorMessage;
+        app.resultAddress = container.ResultAddress;
     }
 
     async _getResultStatusAndDoChanges(message) {
@@ -112,10 +113,11 @@ class MainForm {
                 break;
             case 3:
                 await app._showModal();
-                this._enableButtons();
+                this._enableButtons(true);
 
                 break;
         }
+        app.messageAreaBlock.value = app.errorMessage;
     }
 
     _addRedBorderToInputs() {
@@ -133,9 +135,7 @@ class MainForm {
         }
         this.submitButton = document.getElementById("submitButton");
         this.submitButton.onclick = () => {
-            debugger;
             this.form.setAttribute('action', "/Home/SubmitForm");
-            this.form.submit();
         };
     }
 
@@ -164,7 +164,6 @@ class App {
         this.modalBlock = document.getElementById("modal");
         this.mainForm = new MainForm();
         this.selectAddressButton = document.getElementById("selectAddress");
-        this.selectAddressButton.onclick = this._showModal;
         this.messageAreaBlock = document.getElementById("messageArea");
     }
 
@@ -195,6 +194,7 @@ class ClQACAddress {
     m_sStreet;
     m_sDistrict;
     m_iHouseNo;
+
     toString() {
         return `Country is: ${this.m_sCountry}, Postal Code: ${this.m_sZIP},
          City: ${this.m_sCity}, Street: ${this.m_sStreet}, District: ${this.m_sDistrict},

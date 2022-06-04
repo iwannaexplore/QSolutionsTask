@@ -14,42 +14,6 @@ namespace SoapToJson.Controllers;
 [Route("[controller]")]
 public class AddressCheckerController : ControllerBase
 {
-    private string DumbXml { get; set; } = @"<?xml version=""1.0"" encoding=""utf-8""?>
-    <soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"">
-    <soap:Body>
-    <UCheckAddress xmlns=""http://www.qaddress.de/webservices"">
-        <UserName>testuser</UserName>
-    <UserPassword>TgNmUh-uw!sl$</UserPassword>
-    <Tolerance>2</Tolerance>
-    <SourceAddress>
-    <m_iAddressType>1</m_iAddressType>
-    <m_iFlags>1</m_iFlags>
-    <m_iCountryID>1</m_iCountryID>
-    <m_iRegionID>1</m_iRegionID>
-    <m_iLanguageID>1</m_iLanguageID>
-    <m_iHouseNo>1</m_iHouseNo>
-    <m_iHouseNoStart>1</m_iHouseNoStart>
-    <m_iHouseNoEnd>1</m_iHouseNoEnd>
-    <m_sCountry>w</m_sCountry>
-    <m_sRegion>w</m_sRegion>
-    <m_sZIP>w</m_sZIP>
-    <m_sCity>w</m_sCity>
-    <m_sCityExt>w</m_sCityExt>
-    <m_sShortCity>w</m_sShortCity>
-    <m_sOldCity>w</m_sOldCity>
-    <m_sOldCityExt>w</m_sOldCityExt>
-    <m_sDistrict>w</m_sDistrict>
-    <m_sStreet>w</m_sStreet>
-    <m_sShortStreet>w</m_sShortStreet>
-    <m_sOldStreet>w</m_sOldStreet>
-    <m_sHouseExt>w</m_sHouseExt>
-    <m_sHouseExtStart>w</m_sHouseExtStart>
-    <m_sHouseExtEnd>w</m_sHouseExtEnd>
-    </SourceAddress>
-    </UCheckAddress>
-    </soap:Body>
-    </soap:Envelope>";
-
     [HttpPost]
     public async Task<string> CheckAddressAsync([FromBody] ClQACAddressViewModel addressViewModel)
     {
@@ -67,12 +31,6 @@ public class AddressCheckerController : ControllerBase
         var modelJson = ConvertToJson(model);
 
         return modelJson;
-    }
-
-    [HttpGet]
-    public string CheckAddressAsync()
-    {
-        return "Hello world";
     }
 
     private string ConvertToJson(ClQACResultAddress model)
@@ -108,8 +66,9 @@ public class AddressCheckerController : ControllerBase
             case QAC_STATUS.ABROAD:
                 return "Status ERROR/ABROAD/NOT FOUND obtained during address check, submitting is cancelled";
             case QAC_STATUS.CORRECT:
+                return "Correct";
             case QAC_STATUS.AUTOCORRECTED:
-                return address.ToFullAddress();
+                return "Autocorrected";
             case QAC_STATUS.MULTIPLERESULTS:
                 return "Choose between multiple results";
             default:

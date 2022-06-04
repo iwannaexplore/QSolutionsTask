@@ -1,6 +1,5 @@
 ﻿using ClQACEntities;
 using Microsoft.AspNetCore.Mvc;
-using qSolutionsTask.ViewModels;
 
 namespace qSolutionsTask.Controllers;
 
@@ -20,7 +19,7 @@ public class HomeController : Controller
             m_sCountry = "Deutschland", m_sZIP = "81245", m_sCity = "München", m_sStreet = "Ophenbachstr.",
             m_iHouseNo = 47, m_sDistrict = "Pasing-Obermenzing"
         };
-        return View(autoCorrect);
+        return View(multipleTest);
     }
 
     [HttpPost]
@@ -28,13 +27,7 @@ public class HomeController : Controller
     {
         return PartialView("_MutlipleResults", similarAddresses);
     }
-
-    [HttpGet]
-    public IActionResult MultipleResultTable()
-    {
-        var similarAddresses = new List<ClQACSimilarAddress>().ToArray();
-        return PartialView("_MutlipleResults", similarAddresses);
-    }
+    
 
     [HttpPost]
     public IActionResult SubmitForm(ClQACAddress address)

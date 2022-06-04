@@ -5,14 +5,6 @@ namespace SoapToJson.Extensions;
 
 public static class ClQACAddressExtension
 {
-    public static string ToFullAddress(this ClQACAddress address)
-    {
-        return
-            $"Country: {address.m_sCountry}, City: {address.m_sCity}, " +
-            $"District: {address.m_sDistrict}," +
-            $" Street:{address.m_sStreet} , HouseNumber: {address.m_iHouseNo}";
-    }
-
     public static ClQACAddress FillFromViewModel(this ClQACAddress address, ClQACAddressViewModel viewModel)
     {
         address.m_sCity = viewModel.m_sCity;
