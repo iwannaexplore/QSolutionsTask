@@ -2,10 +2,10 @@ using System.Collections;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using qSolutionsTask.Entity;
-using qSolutionsTask.ViewModels;
+using ClQACEntities;
+using SoapToJson.ViewModels;
 
-namespace qSolutionsTask.Services;
+namespace SoapToJson.Services;
 
 public static class XmlSoapConverter
 {
@@ -13,31 +13,22 @@ public static class XmlSoapConverter
  и встроенный Serializer. Но из-за того, что SOAP вставляет свои теги в XML, приходится вручную вытаскивать нужный 
  элемент. Возможно, это можно как-то обойти, по крайней мере я пару раз пробовал, но безуспешно. Есть ещё пару идей,
   но нет времени на проверку, так что оставлю как есть*/
-    public static object ConvertFromSoapXml(string postResponse, Type type)
+    public static UCheckAddressResponseViewModel ConvertFromSoapXmlToModel(string postResponse)
     {
-        
-        XmlSerializer serializer = new XmlSerializer(type);
+        XmlSerializer serializer = new XmlSerializer(typeof(UCheckAddressResponseViewModel));
 
         XDocument document = XDocument.Parse(postResponse);
         XElement? evelope = (XElement)document.FirstNode!; //можно было бы написать через проверку на null
         var body = evelope.FirstNode as XElement;
         var uCheckAddress = body!.FirstNode as XElement;
-        
-        object response = serializer.Deserialize(uCheckAddress!.CreateReader())!;
-        
+
+        UCheckAddressResponseViewModel response =
+            serializer.Deserialize(uCheckAddress!.CreateReader())! as UCheckAddressResponseViewModel ??
+            new UCheckAddressResponseViewModel();
+
         return response;
     }
 
-    private static List<ClQACSimilarAddress> GetSimilarAddresses(ArrayList similarAddressesXml)
-    {
-        XmlSerializer serializer = new XmlSerializer(typeof(ClQACSimilarAddress));
-        var similarAddresses = new List<ClQACSimilarAddress>();
-        foreach (var similarAddress in similarAddressesXml)
-        {
-            // var result = serializer.Deserialize(());
-        }
-        return new List<ClQACSimilarAddress>();
-    }
 
     public static string ConvertToSoapXml(object obj, Type objType)
     {

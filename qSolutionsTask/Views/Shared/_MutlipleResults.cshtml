@@ -3,19 +3,24 @@
 @model qSolutionsTask.Entity.ClQACSimilarAddress[]
 @for (var i = 0; i < Model.Length; i++)
 {
-    var elem = Model[i];
     var index = i;
+    //лучше конечно, было бы использовать asp-for но из-за того, что он находится внутри цикла,
+    // выставляются неверные значения для поля name
+
     <form asp-controller="Home" asp-action="SubmitForm" class="d-none" id=@("addressForm" + index)>
-        <input type="text" asp-for="@elem.Address.m_sCountry">
-        <input type="text" asp-for="@elem.Address.m_sCity">
-        <input type="text" asp-for="@elem.Address.m_sDistrict">
-        <input type="text" asp-for="@elem.Address.m_sStreet">
-        <input type="number" asp-for="@elem.Address.m_iHouseNo">
-        <input type="text" asp-for="@elem.Address.m_sZIP">
+        <input type="text" name="address.m_sCountry" value="@Model[i].Address.m_sCountry">
+        <input type="text" name="address.m_sCity" value="@Model[i].Address.m_sCity">
+        <input type="text" name="address.m_sDistrict" value="@Model[i].Address.m_sDistrict">
+        <input type="text" name="address.m_sStreet" value="@Model[i].Address.m_sStreet">
+        <input type="number" name="address.m_iHouseNo" value="@Model[i].Address.m_iHouseNo">
+        <input type="number" name="address.m_iHouseNoStart" value="@Model[i].Address.m_iHouseNoStart">
+        <input type="number" name="address.m_iHouseNoEnd" value="@Model[i].Address.m_iHouseNoEnd">
+        <input type="text" name="address.m_sZIP" value="@Model[i].Address.m_sZIP">
     </form>
 }
-
-
+@* ToDo We must fill text area with submitted values*@
+@* ToDo We must fill inputs with submitted values *@
+@* ToDo convert xml convertion to JSON webApi *@
 <!-- Modal -->
 <div class="modal fade" id="AddressesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog .modal-dialog-centered modal-xl">
@@ -30,9 +35,11 @@
                     <tr>
                         <th scope="col">Similarity</th>
                         <th scope="col">Country</th>
+                        <th scope="col">Zip</th>
                         <th scope="col">City</th>
-                        <th scope="col">District</th>
                         <th scope="col">Street</th>
+                        <th scope="col">District</th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -44,9 +51,11 @@
                         <tr formIndex="@index" onclick="SelectTrElement(this)">
                             <th scope="row">@elem.Similarity</th>
                             <td>@elem.Address.m_sCountry</td>
+                            <td>@elem.Address.m_sZIP</td>
                             <td>@elem.Address.m_sCity</td>
-                            <td>@elem.Address.m_sDistrict</td>
                             <td>@elem.Address.m_sStreet @(elem.Address.m_iHouseNo == 0 ? $"{elem.Address.m_iHouseNoStart}-{elem.Address.m_iHouseNoEnd}" : elem.Address.m_iHouseNo)</td>
+                            <td>@elem.Address.m_sDistrict</td>
+
                         </tr>
                     }
 

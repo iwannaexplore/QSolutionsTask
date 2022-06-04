@@ -7,7 +7,7 @@ $(document).ready(function () {
     console.log(submitButton);
     submitButton.onclick = () => {
         let form = document.getElementById("addressForm");
-        form.attr('action', "/Home/SubmitForm");
+        form.setAttribute('action', "/Home/SubmitForm");
         form.submit();
     };
     $("#AddressesModal").modal('show');

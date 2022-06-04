@@ -1,8 +1,6 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Serialization;
 
-namespace qSolutionsTask.Entity;
+namespace ClQACEntities;
 
 [Serializable]
 public class ClQACAddress

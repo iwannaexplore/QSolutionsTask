@@ -7,47 +7,51 @@
     ViewData["Title"] = "Home Page";
     ClQACResultAddress operationResult = ViewBag.OperationResult as ClQACResultAddress;
 }
-
+@*тут было бы неплохо использовать asp-for, но из-за того, что форма изменяется после post, asp-for
+ почему-то не вытягивает новые значения. Вообще в целом этот asp-for как я вычитал, довольно не всесильный*@
 <div class="row d-flex justify-content-center">
     <form asp-controller="SoapApi" asp-action="CheckAddress" class="col-8" id="addressForm">
         <div class="row">
             <div class="col">
+                @* ToDo change asp-for to input name and value *@
                 <label class="form-label">@Html.LabelFor(m => m.m_sCountry)</label>
                 <input type="text" asp-for="m_sCountry" class="form-control">
+                @* ToDo Add green border if change values *@
+            </div>
+            <div class="col">
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_sZIP)</label>
+                <input type="text" asp-for="m_sZIP" class="form-control">
             </div>
             <div class="col">
                 <label class="form-label">@Html.DisplayNameFor(m => m.m_sCity)</label>
                 <input type="text" asp-for="m_sCity" class="form-control">
             </div>
+
+
+        </div>
+        <div class="row">
+
+            <div class="col">
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_sStreet)</label>
+                <input type="text" name="m_sStreet" value="@Model.m_sStreet" class="form-control">
+            </div>
+            <div class="col">
+                <label class="form-label">@Html.DisplayNameFor(m => m.m_iHouseNo)</label>
+                <input type="number" asp-for="m_iHouseNo" class="form-control">
+            </div>
+
             <div class="col">
 
                 <label class="form-label">@Html.DisplayNameFor(m => m.m_sDistrict)</label>
                 <input type="text" asp-for="m_sDistrict" class="form-control">
             </div>
 
-
-        </div>
-        <div class="row">
-            <div class="col">
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_sStreet)</label>
-                <input type="text" asp-for="m_sStreet" class="form-control">
-            </div>
-            <div class="col">
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_iHouseNo)</label>
-                <input type="number" asp-for="m_iHouseNo" class="form-control">
-            </div>
-            <div class="col">
-                <label class="form-label">@Html.DisplayNameFor(m => m.m_sZIP)</label>
-                <input type="text" asp-for="m_sZIP" class="form-control">
-            </div>
-
-
         </div>
 
         <div class="row">
             <div class="col ">
                 <button type="submit" class="btn btn-warning mt-2  w-25" id="validateButton">Validate</button>
-                <button type="button" class="btn btn-secondary mt-2  w-25" data-bs-toggle="modal" data-bs-target="#AddressesModal" @(operationResult==null ? "disabled" : operationResult.SimilarAddresses.Count == 0 ? "disabled" : "")>
+                <button type="button" class="btn btn-secondary mt-2  w-25" data-bs-toggle="modal" data-bs-target="#AddressesModal" @(operationResult == null ? "disabled" : operationResult.SimilarAddresses.Count == 0 ? "disabled" : "")>
                     Select Addresses
                 </button>
                 <button type="button" class="btn btn-outline-success mt-2 w-25" id="submitButton" @(operationResult == null ? "disabled" : "")>Submit</button>
@@ -63,7 +67,7 @@
             </textarea>
             @if (operationResult.ResultStatus == (int)QAC_STATUS.MULTIPLERESULTS)
             {
-                @* @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[]) *@
+                @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[])
             }
         }
         else
@@ -74,7 +78,3 @@
     </div>
 
 </div>
-@if (operationResult != null)
-{
-    @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[])
-}

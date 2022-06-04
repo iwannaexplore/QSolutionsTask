@@ -1,7 +1,7 @@
 using System.Xml.Serialization;
-using qSolutionsTask.Entity;
+using ClQACEntities;
 
-namespace qSolutionsTask.ViewModels;
+namespace SoapToJson.ViewModels;
 
 [Serializable]
 [XmlType(TypeName="UCheckAddress")]

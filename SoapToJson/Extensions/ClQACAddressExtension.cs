@@ -1,6 +1,6 @@
-using qSolutionsTask.Entity;
+using ClQACEntities;
 
-namespace qSolutionsTask.Extensions;
+namespace SoapToJson.Extensions;
 
 public static class ClQACAddressExtension
 {

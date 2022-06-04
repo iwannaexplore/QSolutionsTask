@@ -1,6 +1,4 @@
-using System.Xml.Serialization;
-
-namespace qSolutionsTask.Entity;
+namespace ClQACEntities;
 
 [Serializable]
 public class ClQACSimilarAddress

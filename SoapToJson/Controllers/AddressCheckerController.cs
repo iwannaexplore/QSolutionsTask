@@ -1,43 +1,57 @@
-using System.Net;
-using System.Reflection.Metadata;
-using System.Security;
 using System.Text;
 using System.Text.Json;
+using ClQACEntities;
 using Microsoft.AspNetCore.Mvc;
-using qSolutionsTask.Entity;
-using qSolutionsTask.Extensions;
-using qSolutionsTask.Services;
-using qSolutionsTask.ViewModels;
+using SoapToJson.Extensions;
+using SoapToJson.Services;
+using SoapToJson.ViewModels;
 
-namespace qSolutionsTask.Controllers;
+namespace SoapToJson.Controllers;
 
-public enum QAC_STATUS
-{
-    ERROR = -2,
-    ABROAD = -1,
-    NOTFOUND = 0,
-    CORRECT = 1,
-    AUTOCORRECTED = 2,
-    MULTIPLERESULTS = 3
-}
-
-public class SoapApiController : Controller
-{
+[ApiController]
+[Route("[controller]")]
+public class AddressCheckerController : ControllerBase{
     [HttpPost]
-    public async Task<IActionResult> CheckAddressAsync([FromForm] ClQACAddress address)
+    public async Task<string> CheckAddressAsync([FromForm] ClQACAddress address)
     {
         var viewModel = CreateCheckAddressViewModel(address);
-        var soapViewModel = XmlSoapConverter.ConvertToSoapXml(viewModel, typeof(UCheckAddressViewModel));
+        var viewModelSoap = XmlSoapConverter.ConvertToSoapXml(viewModel, typeof(UCheckAddressViewModel));
 
-        var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, soapViewModel);
-        var container = (UCheckAddressResponseViewModel)XmlSoapConverter.ConvertFromSoapXml(postResponse,
-            typeof(UCheckAddressResponseViewModel));
+        var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, viewModelSoap);
+        var container = XmlSoapConverter.ConvertFromSoapXmlToModel(postResponse);
         var model = container.UCheckAddressResult;
+        
+        
+        ChangeAddress(model);
         model.ErrorMessage = CreateMessage(model.ResultStatus, model.ResultAddress);
-        ViewBag.OperationResult = container.UCheckAddressResult;
-        return View("../Home/Index", container.UCheckAddressResult.ResultAddress);
+        var modelJson = ConvertToJson(model);
+        
+        return modelJson;
+    }
+    
+
+    private string ConvertToJson(ClQACResultAddress model)
+    {
+        var modelJson = JsonSerializer.Serialize(model);
+        return modelJson;
     }
 
+    private void ChangeAddress(ClQACResultAddress model)
+    {
+        var status =(QAC_STATUS) model.ResultStatus;
+        switch (status)
+        {
+            case QAC_STATUS.ERROR:
+            case QAC_STATUS.NOTFOUND:
+            case QAC_STATUS.ABROAD:
+            case QAC_STATUS.CORRECT:
+            case QAC_STATUS.MULTIPLERESULTS:
+                break;
+            case QAC_STATUS.AUTOCORRECTED:
+                model.ResultAddress = (model.SimilarAddresses[0] as ClQACSimilarAddress)!.Address;
+                break;
+        }
+    }
     private string CreateMessage(int statusNumber, ClQACAddress address)
     {
         var status = (QAC_STATUS)statusNumber;

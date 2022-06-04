@@ -1,4 +1,4 @@
-namespace qSolutionsTask;
+namespace SoapToJson;
 
 public static class AppConstants
 {
