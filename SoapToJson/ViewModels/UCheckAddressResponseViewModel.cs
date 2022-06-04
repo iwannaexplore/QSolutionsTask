@@ -4,7 +4,7 @@ using ClQACEntities;
 namespace SoapToJson.ViewModels;
 
 [Serializable]
-[XmlType(TypeName="UCheckAddressResponse")]
+[XmlType(TypeName = "UCheckAddressResponse")]
 [XmlRoot(Namespace = "http://www.qaddress.de/webservices")]
 public class UCheckAddressResponseViewModel
 {

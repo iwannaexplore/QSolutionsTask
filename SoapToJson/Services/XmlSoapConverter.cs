@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using ClQACEntities;
 using SoapToJson.ViewModels;
 
 namespace SoapToJson.Services;
@@ -15,14 +13,14 @@ public static class XmlSoapConverter
   но нет времени на проверку, так что оставлю как есть*/
     public static UCheckAddressResponseViewModel ConvertFromSoapXmlToModel(string postResponse)
     {
-        XmlSerializer serializer = new XmlSerializer(typeof(UCheckAddressResponseViewModel));
+        var serializer = new XmlSerializer(typeof(UCheckAddressResponseViewModel));
 
-        XDocument document = XDocument.Parse(postResponse);
-        XElement? evelope = (XElement)document.FirstNode!; //можно было бы написать через проверку на null
+        var document = XDocument.Parse(postResponse);
+        var evelope = (XElement)document.FirstNode!; //можно было бы написать через проверку на null
         var body = evelope.FirstNode as XElement;
         var uCheckAddress = body!.FirstNode as XElement;
 
-        UCheckAddressResponseViewModel response =
+        var response =
             serializer.Deserialize(uCheckAddress!.CreateReader())! as UCheckAddressResponseViewModel ??
             new UCheckAddressResponseViewModel();
 

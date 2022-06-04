@@ -15,6 +15,10 @@ function SelectTrElement(selectedElem) {
 
 
 class MainForm {
+    form;
+    elementsHtml;
+    validateButton;
+
     constructor() {
         this.form = document.getElementById("addressForm");
         this.elementsHtml = this.form.getElementsByTagName("input");
@@ -24,10 +28,6 @@ class MainForm {
             await this.submitForm();
         }
     }
-
-    form;
-    elementsHtml;
-    validateButton;
 
     getValuesOfElements() {
         let address = new ClQACAddress();
@@ -79,6 +79,10 @@ class MainForm {
 }
 
 class App {
+    mainForm;
+    errorMessage;
+    similarAddresses;
+
     constructor() {
         this.mainForm = new MainForm();
 
@@ -89,10 +93,6 @@ class App {
         };
         $("#AddressesModal")?.modal('show');
     }
-
-    mainForm;
-    errorMessage;
-    similarAddresses;
 }
 
 class ClQACAddress {
