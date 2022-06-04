@@ -1,5 +1,6 @@
 ﻿using ClQACEntities;
 using Microsoft.AspNetCore.Mvc;
+using qSolutionsTask.ViewModels;
 
 namespace qSolutionsTask.Controllers;
 
@@ -22,6 +23,18 @@ public class HomeController : Controller
         return View(autoCorrect);
     }
 
+    [HttpPost]
+    public IActionResult MultipleResultTable([FromBody] ClQACSimilarAddress[] similarAddresses)
+    {
+        return PartialView("_MutlipleResults", similarAddresses);
+    }
+
+    [HttpGet]
+    public IActionResult MultipleResultTable()
+    {
+        var similarAddresses = new List<ClQACSimilarAddress>().ToArray();
+        return PartialView("_MutlipleResults", similarAddresses);
+    }
 
     [HttpPost]
     public IActionResult SubmitForm(ClQACAddress address)

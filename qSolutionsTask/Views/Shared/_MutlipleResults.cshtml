@@ -3,17 +3,17 @@
     var index = i;
     //лучше конечно, было бы использовать asp-for но из-за того, что он находится внутри цикла,
     // выставляются неверные значения для поля name
-
-    <form asp-controller="Home" asp-action="SubmitForm" class="d-none" id=@("addressForm" + index)>
-        <input type="text" name="address.m_sCountry" value="@Model[i].Address.m_sCountry">
-        <input type="text" name="address.m_sCity" value="@Model[i].Address.m_sCity">
-        <input type="text" name="address.m_sDistrict" value="@Model[i].Address.m_sDistrict">
-        <input type="text" name="address.m_sStreet" value="@Model[i].Address.m_sStreet">
-        <input type="number" name="address.m_iHouseNo" value="@Model[i].Address.m_iHouseNo">
-        <input type="number" name="address.m_iHouseNoStart" value="@Model[i].Address.m_iHouseNoStart">
-        <input type="number" name="address.m_iHouseNoEnd" value="@Model[i].Address.m_iHouseNoEnd">
-        <input type="text" name="address.m_sZIP" value="@Model[i].Address.m_sZIP">
-    </form>
+    @* *@
+    @* <form asp-controller="Home" asp-action="SubmitForm" class="d-none" id=@("addressForm" + index)> *@
+    @*     <input type="text" name="address.m_sCountry" value="@Model[i].Address.m_sCountry"> *@
+    @*     <input type="text" name="address.m_sCity" value="@Model[i].Address.m_sCity"> *@
+    @*     <input type="text" name="address.m_sDistrict" value="@Model[i].Address.m_sDistrict"> *@
+    @*     <input type="text" name="address.m_sStreet" value="@Model[i].Address.m_sStreet"> *@
+    @*     <input type="number" name="address.m_iHouseNo" value="@Model[i].Address.m_iHouseNo"> *@
+    @*     <input type="number" name="address.m_iHouseNoStart" value="@Model[i].Address.m_iHouseNoStart"> *@
+    @*     <input type="number" name="address.m_iHouseNoEnd" value="@Model[i].Address.m_iHouseNoEnd"> *@
+    @*     <input type="text" name="address.m_sZIP" value="@Model[i].Address.m_sZIP"> *@
+    @* </form> *@
 }
 @* ToDo We must fill text area with submitted values*@
 @* ToDo We must fill inputs with submitted values *@
@@ -61,9 +61,9 @@
 
             </div>
             <div class="modal-footer">
-                <input type="submit" id="saveSelected" class="btn btn-outline-success" data-bs-dismiss="modal" value="Save Selected"/>
-                <input type="submit" class="btn btn-secondary" data-bs-dismiss="modal" form="addressForm" value="Save Original"/>
-                <button type="button" class="btn btn-danger">Close</button>
+                <button id="saveSelected" class="btn btn-outline-success" data-bs-dismiss="modal" onclick="UseSelectedAddress()">Save Selected</button>
+                <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal" form="addressForm">Save Original</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

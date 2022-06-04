@@ -20,3 +20,10 @@ body {
 .tr-selected {
     background-color: #cdcdcd;
 }
+
+.green-border{
+    border: green 1px solid;
+}
+.red-border{
+    border: red 1px solid;
+}

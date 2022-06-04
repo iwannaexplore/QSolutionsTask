@@ -26,7 +26,7 @@
 
 
         </div>
-        <div class="row">
+        <div class="row mt-3">
 
             <div class="col">
                 <label class="form-label">Street</label>
@@ -47,33 +47,17 @@
 
         <div class="row">
             <div class="col ">
-                <button class="btn btn-warning mt-2  w-25" id="validateButton">Validate</button>
-                <button type="button" id="selectAddress" class="btn btn-secondary mt-2  w-25" data-bs-toggle="modal" data-bs-target="#AddressesModal">
+                <button class="btn btn-warning mt-4 me-2  w-25" id="validateButton">Validate</button>
+                <button id="selectAddress" class="btn me-2 btn-secondary mt-4  w-25" data-bs-toggle="modal" data-bs-target="#AddressesModal" disabled="disabled">
                     Select Addresses
                 </button>
-                <button type="button" class="btn btn-outline-success mt-2 w-25" id="submitButton">Submit</button>
+                <button class="btn btn-outline-success mt-4 me-2 w-25" id="submitButton" disabled="disabled">Submit</button>
 
             </div>
         </div>
     </form>
     <div class="col-4">
-
-        @* ToDo Make partial view work *@
-        @* @if (operationResult != null) *@
-        @* { *@
-        @*     <textarea class="form-control"> *@
-        @*       @operationResult.ErrorMessage *@
-        @*     </textarea> *@
-        @*     @if (operationResult.ResultStatus == (int)QAC_STATUS.MULTIPLERESULTS) *@
-        @*     { *@
-        @*         @Html.Partial("_MutlipleResults", operationResult.SimilarAddresses.ToArray(typeof(ClQACSimilarAddress)) as ClQACSimilarAddress[]) *@
-        @*     } *@
-        @* } *@
-        @* else *@
-        @* { *@
-        @*     <textarea class="form-control" rows="3"></textarea> *@
-        @* } *@
-
+        <textarea class="form-control" id="messageArea" rows="6"></textarea>
     </div>
 
 </div>
