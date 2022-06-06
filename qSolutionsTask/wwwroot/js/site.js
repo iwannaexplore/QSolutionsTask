@@ -69,7 +69,7 @@ class MainForm {
 
     async validateForm() {
         let values = this.getValuesOfElements();
-        let response = await fetch(this.form.getAttribute("action"), {
+        let response = await fetch("https://localhost:7120/AddressChecker", {
             mode: 'cors',
             method: 'POST',
             headers: {
