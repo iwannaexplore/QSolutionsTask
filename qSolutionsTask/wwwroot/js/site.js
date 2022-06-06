@@ -13,7 +13,6 @@ function SelectTrElement(selectedElem) {
 }
 
 function UseSelectedAddress() {
-    debugger;
     app.mainForm.setValuesForElements(app.similarAddresses[app.selectedTrIndex].Address, true);
 }
 
@@ -196,8 +195,8 @@ class ClQACAddress {
     m_iHouseNo;
 
     toString() {
-        return `Country is: ${this.m_sCountry}, Postal Code: ${this.m_sZIP},
-         City: ${this.m_sCity}, Street: ${this.m_sStreet}, District: ${this.m_sDistrict},
-         House Number: ${this.m_iHouseNo}`;
+        return `Country is: ${this.m_sCountry}, Postal Code: ${this.m_sZIP}\n` +
+            `City: ${this.m_sCity}, Street: ${this.m_sStreet},\n` +
+            `District: ${this.m_sDistrict}, House Number: ${this.m_iHouseNo}`;
     }
 }
