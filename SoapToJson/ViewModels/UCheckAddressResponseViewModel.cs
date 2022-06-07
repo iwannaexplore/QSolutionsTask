@@ -1,5 +1,5 @@
 using System.Xml.Serialization;
-using ClQACEntities;
+using SoapToJson.QACWebService;
 
 namespace SoapToJson.ViewModels;
 

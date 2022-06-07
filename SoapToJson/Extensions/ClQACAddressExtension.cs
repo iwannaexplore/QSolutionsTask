@@ -1,4 +1,4 @@
-using ClQACEntities;
+using SoapToJson.QACWebService;
 using SoapToJson.ViewModels;
 
 namespace SoapToJson.Extensions;

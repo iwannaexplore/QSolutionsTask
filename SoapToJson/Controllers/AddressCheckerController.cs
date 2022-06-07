@@ -1,9 +1,9 @@
 using System.Text;
-using ClQACEntities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SoapToJson.Extensions;
+using SoapToJson.QACWebService;
 using SoapToJson.Services;
 using SoapToJson.ViewModels;
 
@@ -104,4 +104,13 @@ public class AddressCheckerController : ControllerBase
         };
         return viewModel;
     }
+}
+public enum QAC_STATUS
+{
+    ERROR = -2,
+    ABROAD = -1,
+    NOTFOUND = 0,
+    CORRECT = 1,
+    AUTOCORRECTED = 2,
+    MULTIPLERESULTS = 3
 }

@@ -1,0 +1,23 @@
+{
+  "providerId": "Microsoft.Tools.ServiceModel.Svcutil",
+  "version": "1.0.0",
+  "ExtendedData": {
+    "inputs": [
+      "https://qws1.de/QWS/QACWebService.asmx"
+    ],
+    "namespaceMappings": [
+      "*, SoapToJson.QACWebService"
+    ],
+    "outputFile": "QACWebService.asmx.cs",
+    "references": [
+      "/Users/dmitriysenko/Projects/qSolutionsTask/SoapToJson/bin/Debug/net6.0/ClQACEntities.dll",
+      "Microsoft.OpenApi, {Microsoft.OpenApi, 1.2.3}",
+      "Newtonsoft.Json, {Newtonsoft.Json, 13.0.1}",
+      "Swashbuckle.AspNetCore.Swagger, {Swashbuckle.AspNetCore.Swagger, 6.2.3}",
+      "Swashbuckle.AspNetCore.SwaggerGen, {Swashbuckle.AspNetCore.SwaggerGen, 6.2.3}",
+      "Swashbuckle.AspNetCore.SwaggerUI, {Swashbuckle.AspNetCore.SwaggerUI, 6.2.3}"
+    ],
+    "targetFramework": "net6.0",
+    "typeReuseMode": "All"
+  }
+}
