@@ -1,10 +1,8 @@
-using System.Text;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SoapToJson.Extensions;
 using SoapToJson.QACWebService;
-using SoapToJson.Services;
 using SoapToJson.ViewModels;
 
 namespace SoapToJson.Controllers;
@@ -14,19 +12,24 @@ namespace SoapToJson.Controllers;
 [Route("[controller]")]
 public class AddressCheckerController : ControllerBase
 {
+    public QACWebServiceSoapClient Client { get; set; }
+    public AddressCheckerController(QACWebServiceSoapClient client)
+    {
+        Client = client;
+    }
     [HttpPost]
     public async Task<string> CheckAddressAsync([FromBody] ClQACAddressViewModel addressViewModel)
     {
+        
         var address = new ClQACAddress().FillFromViewModel(addressViewModel);
-        var viewModel = CreateCheckAddressViewModel(address);
-        var viewModelSoap = XmlSoapConverter.ConvertToSoapXml(viewModel, typeof(UCheckAddressViewModel));
+        var result = await Client.UCheckAddressAsync(AppConstants.TestUserName, AppConstants.TestUserPassword,
+            AppConstants.TestTolerance, address);
+        if (result == null)
+        {
+            return "Error";
+        }
 
-        var postResponse = await PostSoapRequestAsync(AppConstants.ApiUrl, viewModelSoap);
-        var container = XmlSoapConverter.ConvertFromSoapXmlToModel(postResponse);
-        var model = container.UCheckAddressResult;
-
-
-        ChangeAddress(model);
+        var model = result.Body.UCheckAddressResult;
         model.ErrorMessage = CreateMessage(model.ResultStatus, model.ResultAddress);
         var modelJson = ConvertToJson(model);
 
@@ -39,22 +42,6 @@ public class AddressCheckerController : ControllerBase
         return modelJson;
     }
 
-    private void ChangeAddress(ClQACResultAddress model)
-    {
-        var status = (QAC_STATUS)model.ResultStatus;
-        switch (status)
-        {
-            case QAC_STATUS.ERROR:
-            case QAC_STATUS.NOTFOUND:
-            case QAC_STATUS.ABROAD:
-            case QAC_STATUS.CORRECT:
-            case QAC_STATUS.MULTIPLERESULTS:
-                break;
-            case QAC_STATUS.AUTOCORRECTED:
-                model.ResultAddress = (model.SimilarAddresses[0] as ClQACSimilarAddress)!.Address;
-                break;
-        }
-    }
 
     private string CreateMessage(int statusNumber, ClQACAddress address)
     {
@@ -75,36 +62,8 @@ public class AddressCheckerController : ControllerBase
                 return "Unknown Error";
         }
     }
-
-    private async Task<string> PostSoapRequestAsync(string url, string xmtText)
-    {
-        var httpClient = new HttpClient();
-        using (HttpContent content = new StringContent(xmtText, Encoding.UTF8, "text/xml"))
-        using (var request = new HttpRequestMessage(HttpMethod.Post, url))
-        {
-            var byteArray = Encoding.UTF8.GetBytes(xmtText);
-            request.Content = content;
-
-            request.Headers.Add("Content-Lenght", byteArray.Length.ToString());
-            using (var response =
-                   await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead))
-            {
-                var result = await response.Content.ReadAsStringAsync();
-                return result;
-            }
-        }
-    }
-
-    private UCheckAddressViewModel CreateCheckAddressViewModel(ClQACAddress address)
-    {
-        var viewModel = new UCheckAddressViewModel
-        {
-            UserName = AppConstants.TestUserName, UserPassword = AppConstants.TestUserPassword,
-            Tolerance = AppConstants.TestTolerance, SourceAddress = address
-        };
-        return viewModel;
-    }
 }
+
 public enum QAC_STATUS
 {
     ERROR = -2,

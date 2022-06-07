@@ -1,9 +1,14 @@
+using SoapToJson;
+using SoapToJson.QACWebService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<QACWebServiceSoapClient>((s) => new QACWebServiceSoapClient(
+    QACWebServiceSoapClient.EndpointConfiguration.QACWebServiceSoap,
+    AppConstants.ApiUrl));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
